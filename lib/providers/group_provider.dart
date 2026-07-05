@@ -30,4 +30,9 @@ class GroupProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> createGroup(Group group) async {
+    await _repository.addGroup(group);
+    await loadGroups();
+  }
 }

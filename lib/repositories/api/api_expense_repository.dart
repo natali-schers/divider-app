@@ -2,7 +2,6 @@ import '../../../models/group.dart';
 import '../../../models/expense.dart';
 import '../expense_repository.dart';
 
-
 class ApiExpenseRepository implements ExpenseRepository {
   @override
   Future<List<Group>> getGroups() async {
@@ -21,6 +20,11 @@ class ApiExpenseRepository implements ExpenseRepository {
 
   @override
   Future<void> addExpense(Expense expense) async {
+    throw UnimplementedError('ApiExpenseRepository ainda não implementado');
+  }
+
+  @override
+  Future<void> addGroup(Group group) async {
     throw UnimplementedError('ApiExpenseRepository ainda não implementado');
   }
 }

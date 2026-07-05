@@ -6,4 +6,5 @@ abstract class ExpenseRepository {
   Future<Group> getGroupById(String groupId);
   Future<List<Expense>> getExpensesByGroupId(String groupId);
   Future<void> addExpense(Expense expense);
+  Future<void> addGroup(Group group);
 }

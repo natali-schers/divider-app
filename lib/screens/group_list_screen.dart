@@ -1,3 +1,4 @@
+import 'package:divider_app/screens/create_group_screen.dart';
 import 'package:divider_app/screens/group_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +49,15 @@ class GroupListScreen extends StatelessWidget {
               );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CreateGroupScreen()),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
