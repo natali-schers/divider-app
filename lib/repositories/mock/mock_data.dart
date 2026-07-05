@@ -17,6 +17,11 @@ class MockData {
       name: 'Viagem Floripa',
       members: [member1, member2, member3],
     ),
+    Group(
+      id: 'g2',
+      name: 'Jantar Amigos',
+      members: [member1, member2, member3],
+    ),
   ];
 
   static final expenses = [
@@ -36,7 +41,7 @@ class MockData {
     ),
     Expense(
       id: 'e2',
-      groupId: 'g1',
+      groupId: 'g2',
       description: 'Jantar',
       amount: 150.0,
       paidByMemberId: 'm2',
