@@ -1,3 +1,5 @@
+import 'package:divider_app/models/settlement.dart';
+import 'package:divider_app/utils/balance_calculator.dart';
 import 'package:flutter/foundation.dart';
 import '../models/expense.dart';
 import '../repositories/expense_repository.dart';
@@ -37,5 +39,13 @@ class ExpenseProvider extends ChangeNotifier {
   Future<void> createExpense(Expense expense) async {
     await _repository.addExpense(expense);
     await loadExpenses(expense.groupId);
+  }
+
+  List<Settlement> getSettlements(List<String> memberIds) {
+    final netBalances = BalanceCalculator.calculateNetBalances(
+      memberIds: memberIds,
+      expenses: _expenses,
+    );
+    return BalanceCalculator.simplifyDebts(netBalances);
   }
 }

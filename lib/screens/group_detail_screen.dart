@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/group.dart';
 import '../providers/expense_provider.dart';
 import '../providers/group_provider.dart';
+import 'balances_screen.dart';
 
 class GroupDetailScreen extends StatelessWidget {
   final Group group;
@@ -18,7 +19,27 @@ class GroupDetailScreen extends StatelessWidget {
       child: Builder(
         builder: (context) {
           return Scaffold(
-            appBar: AppBar(title: Text(group.name)),
+            appBar: AppBar(
+              title: Text(group.name),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.account_balance_wallet),
+                  tooltip: 'Ver saldos',
+                  onPressed: () {
+                    final expenseProvider = context.read<ExpenseProvider>();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChangeNotifierProvider.value(
+                          value: expenseProvider,
+                          child: BalancesScreen(group: group),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
             body: Consumer<ExpenseProvider>(
               builder: (context, expenseProvider, child) {
                 switch (expenseProvider.status) {
@@ -36,7 +57,9 @@ class GroupDetailScreen extends StatelessWidget {
                   case LoadStatus.success:
                     final expenses = expenseProvider.expenses;
                     if (expenses.isEmpty) {
-                      return const Center(child: Text('Nenhuma despesa ainda.'));
+                      return const Center(
+                        child: Text('Nenhuma despesa ainda.'),
+                      );
                     }
 
                     final currencyFormat = NumberFormat.currency(
