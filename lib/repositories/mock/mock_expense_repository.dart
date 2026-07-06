@@ -27,4 +27,10 @@ class MockExpenseRepository implements ExpenseRepository {
     await Future.delayed(const Duration(milliseconds: 500));
     MockData.expenses.add(expense);
   }
+
+  @override
+  Future<void> addGroup(Group group) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    MockData.groups.add(group);
+  }
 }

@@ -1,27 +1,30 @@
 import 'package:flutter/foundation.dart';
-import '../models/group.dart';
+import '../models/expense.dart';
 import '../repositories/expense_repository.dart';
 import '../repositories/expense_repository_factory.dart';
+import 'group_provider.dart';
 
-enum LoadStatus { initial, loading, success, error }
-
-class GroupProvider extends ChangeNotifier {
+class ExpenseProvider extends ChangeNotifier {
   final ExpenseRepository _repository = ExpenseRepositoryFactory.create();
 
-  List<Group> _groups = [];
+  List<Expense> _expenses = [];
   LoadStatus _status = LoadStatus.initial;
   String? _errorMessage;
 
-  List<Group> get groups => _groups;
+  List<Expense> get expenses => _expenses;
   LoadStatus get status => _status;
   String? get errorMessage => _errorMessage;
 
-  Future<void> loadGroups() async {
+  double get totalAmount {
+    return _expenses.fold(0.0, (sum, expense) => sum + expense.amount);
+  }
+
+  Future<void> loadExpenses(String groupId) async {
     _status = LoadStatus.loading;
     notifyListeners();
 
     try {
-      _groups = await _repository.getGroups();
+      _expenses = await _repository.getExpensesByGroupId(groupId);
       _status = LoadStatus.success;
     } catch (e) {
       _errorMessage = e.toString();
@@ -31,8 +34,8 @@ class GroupProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createGroup(Group group) async {
-    await _repository.addGroup(group);
-    await loadGroups();
+  Future<void> createExpense(Expense expense) async {
+    await _repository.addExpense(expense);
+    await loadExpenses(expense.groupId);
   }
 }

@@ -1,3 +1,5 @@
+import 'package:divider_app/screens/create_group_screen.dart';
+import 'package:divider_app/screens/group_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/group_provider.dart';
@@ -8,9 +10,7 @@ class GroupListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Meus grupos'),
-      ),
+      appBar: AppBar(title: const Text('Meus grupos')),
       body: Consumer<GroupProvider>(
         builder: (context, groupProvider, child) {
           switch (groupProvider.status) {
@@ -20,7 +20,9 @@ class GroupListScreen extends StatelessWidget {
 
             case LoadStatus.error:
               return Center(
-                child: Text('Erro ao carregar grupos: ${groupProvider.errorMessage}'),
+                child: Text(
+                  'Erro ao carregar grupos: ${groupProvider.errorMessage}',
+                ),
               );
 
             case LoadStatus.success:
@@ -34,11 +36,28 @@ class GroupListScreen extends StatelessWidget {
                   return ListTile(
                     title: Text(group.name),
                     subtitle: Text('${group.members.length} membros'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GroupDetailScreen(group: group),
+                        ),
+                      );
+                    },
                   );
                 },
               );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CreateGroupScreen()),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
