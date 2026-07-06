@@ -1,14 +1,15 @@
-import 'package:divider_app/models/settlement.dart';
-import 'package:divider_app/utils/balance_calculator.dart';
 import 'package:flutter/foundation.dart';
 import '../models/expense.dart';
+import '../models/settlement.dart';
 import '../repositories/expense_repository.dart';
 import '../repositories/expense_repository_factory.dart';
+import '../utils/balance_calculator.dart';
 import 'group_provider.dart';
 
 class ExpenseProvider extends ChangeNotifier {
   final ExpenseRepository _repository = ExpenseRepositoryFactory.create();
 
+  String? _currentGroupId;
   List<Expense> _expenses = [];
   LoadStatus _status = LoadStatus.initial;
   String? _errorMessage;
@@ -21,7 +22,12 @@ class ExpenseProvider extends ChangeNotifier {
     return _expenses.fold(0.0, (sum, expense) => sum + expense.amount);
   }
 
-  Future<void> loadExpenses(String groupId) async {
+  Future<void> loadExpensesForGroup(String groupId) async {
+    if (_currentGroupId == groupId && _status == LoadStatus.success) {
+      return;
+    }
+
+    _currentGroupId = groupId;
     _status = LoadStatus.loading;
     notifyListeners();
 
@@ -38,7 +44,21 @@ class ExpenseProvider extends ChangeNotifier {
 
   Future<void> createExpense(Expense expense) async {
     await _repository.addExpense(expense);
-    await loadExpenses(expense.groupId);
+    await _forceReload(expense.groupId);
+  }
+
+  Future<void> _forceReload(String groupId) async {
+    _currentGroupId = groupId;
+    _status = LoadStatus.loading;
+    notifyListeners();
+    try {
+      _expenses = await _repository.getExpensesByGroupId(groupId);
+      _status = LoadStatus.success;
+    } catch (e) {
+      _errorMessage = e.toString();
+      _status = LoadStatus.error;
+    }
+    notifyListeners();
   }
 
   List<Settlement> getSettlements(List<String> memberIds) {
