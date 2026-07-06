@@ -33,4 +33,9 @@ class ExpenseProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> createExpense(Expense expense) async {
+    await _repository.addExpense(expense);
+    await loadExpenses(expense.groupId);
+  }
 }
