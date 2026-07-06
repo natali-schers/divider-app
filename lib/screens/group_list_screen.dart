@@ -1,6 +1,7 @@
 import 'package:divider_app/screens/create_group_screen.dart';
 import 'package:divider_app/screens/group_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/group_provider.dart';
 
@@ -37,11 +38,10 @@ class GroupListScreen extends StatelessWidget {
                     title: Text(group.name),
                     subtitle: Text('${group.members.length} membros'),
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => GroupDetailScreen(group: group),
-                        ),
+                      context.pushNamed(
+                        'groupDetail',
+                        pathParameters: {'groupId': group.id},
+                        extra: group,
                       );
                     },
                   );
@@ -52,10 +52,7 @@ class GroupListScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const CreateGroupScreen()),
-          );
+          context.pushNamed('createGroup');
         },
         child: const Icon(Icons.add),
       ),

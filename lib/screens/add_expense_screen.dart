@@ -1,5 +1,6 @@
 import 'package:divider_app/providers/expense_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../models/expense.dart';
@@ -63,7 +64,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     await context.read<ExpenseProvider>().createExpense(expense);
 
     if (context.mounted) {
-      Navigator.pop(context);
+      context.pop();
     }
   }
 
