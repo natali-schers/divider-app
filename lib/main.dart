@@ -1,5 +1,5 @@
-import 'package:divider_app/config/app_router.dart';
-import 'package:divider_app/providers/expense_provider.dart';
+import 'package:divider/config/app_router.dart';
+import 'package:divider/providers/expense_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';

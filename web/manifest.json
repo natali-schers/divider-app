@@ -1,6 +1,6 @@
 {
-    "name": "divider_app",
-    "short_name": "divider_app",
+    "name": "divider",
+    "short_name": "divider",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

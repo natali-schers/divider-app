@@ -1,4 +1,4 @@
-package com.example.divider_app
+package com.example.divider
 
 import io.flutter.embedding.android.FlutterActivity
 

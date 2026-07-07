@@ -1,4 +1,4 @@
-import 'package:divider_app/providers/group_provider.dart';
+import 'package:divider/providers/group_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
