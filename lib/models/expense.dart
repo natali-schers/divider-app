@@ -30,7 +30,10 @@ class Expense {
       amount: (json['amount'] as num).toDouble(),
       paidByMemberId: json['paidByMemberId'] as String,
       date: DateTime.parse(json['date'] as String),
-      splitType: SplitType.values.byName(json['splitType'] as String),
+      splitType: SplitType.values.firstWhere(
+        (e) =>
+            e.name.toLowerCase() == (json['splitType'] as String).toLowerCase(),
+      ),
       splits: (json['splits'] as List)
           .map((s) => ExpenseSplit.fromJson(s as Map<String, dynamic>))
           .toList(),

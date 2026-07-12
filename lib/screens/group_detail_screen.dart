@@ -1,4 +1,5 @@
 import 'package:divider/providers/group_provider.dart';
+import 'package:divider/widgets/loading_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -53,7 +54,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
           switch (expenseProvider.status) {
             case LoadStatus.initial:
             case LoadStatus.loading:
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: LoadingView());
 
             case LoadStatus.error:
               return Center(

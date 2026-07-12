@@ -1,4 +1,5 @@
 import 'package:divider/providers/group_provider.dart';
+import 'package:divider/widgets/loading_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class BalancesScreen extends StatelessWidget {
       body: Consumer<ExpenseProvider>(
         builder: (context, expenseProvider, child) {
           if (expenseProvider.status != LoadStatus.success) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: LoadingView());
           }
 
           final memberIds = group.members.map((m) => m.id).toList();
