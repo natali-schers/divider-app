@@ -1,4 +1,5 @@
 import 'package:divider/providers/group_provider.dart';
+import 'package:divider/widgets/loading_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,7 @@ class GroupListScreen extends StatelessWidget {
           switch (groupProvider.status) {
             case LoadStatus.initial:
             case LoadStatus.loading:
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: LoadingView());
 
             case LoadStatus.error:
               return Center(
