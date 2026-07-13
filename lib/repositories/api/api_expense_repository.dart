@@ -5,6 +5,7 @@ import '../../models/expense.dart';
 import '../../models/group.dart';
 import '../../models/split_type.dart';
 import '../expense_repository.dart';
+import 'api_client.dart';
 
 class ApiExpenseRepository implements ExpenseRepository {
   static const _timeout = Duration(seconds: 60);
@@ -13,8 +14,9 @@ class ApiExpenseRepository implements ExpenseRepository {
 
   @override
   Future<List<Group>> getGroups() async {
+    final headers = await ApiClient.authHeaders();
     final response = await http
-        .get(Uri.parse('$_baseUrl/Groups'))
+        .get(Uri.parse('$_baseUrl/groups'), headers: headers)
         .timeout(_timeout);
 
     _throwIfError(response);
@@ -25,8 +27,9 @@ class ApiExpenseRepository implements ExpenseRepository {
 
   @override
   Future<Group> getGroupById(String groupId) async {
+    final headers = await ApiClient.authHeaders();
     final response = await http
-        .get(Uri.parse('$_baseUrl/Groups/$groupId'))
+        .get(Uri.parse('$_baseUrl/groups/$groupId'), headers: headers)
         .timeout(_timeout);
 
     _throwIfError(response);
@@ -36,8 +39,9 @@ class ApiExpenseRepository implements ExpenseRepository {
 
   @override
   Future<List<Expense>> getExpensesByGroupId(String groupId) async {
+    final headers = await ApiClient.authHeaders();
     final response = await http
-        .get(Uri.parse('$_baseUrl/groups/$groupId/expenses'))
+        .get(Uri.parse('$_baseUrl/groups/$groupId/expenses'), headers: headers)
         .timeout(_timeout);
 
     _throwIfError(response);
@@ -45,7 +49,6 @@ class ApiExpenseRepository implements ExpenseRepository {
     final List<dynamic> data = jsonDecode(response.body);
     return data.map((json) {
       final map = json as Map<String, dynamic>;
-      // A API não inclui groupId no DTO (já está implícito na URL) — injetamos aqui.
       map['groupId'] = groupId;
       return Expense.fromJson(map);
     }).toList();
@@ -53,13 +56,12 @@ class ApiExpenseRepository implements ExpenseRepository {
 
   @override
   Future<void> addExpense(Expense expense) async {
+    final headers = await ApiClient.authHeaders();
     final body = {
       'description': expense.description,
       'amount': expense.amount,
       'paidByMemberId': expense.paidByMemberId,
       'splitType': expense.splitType.name,
-      // Para SplitType.equal, a API calcula os splits sozinha — não é
-      // necessário (nem obrigatório) enviar. Enviamos null explicitamente.
       'splits': expense.splitType == SplitType.equal
           ? null
           : expense.splits
@@ -69,8 +71,8 @@ class ApiExpenseRepository implements ExpenseRepository {
 
     final response = await http
         .post(
-          Uri.parse('$_baseUrl/Groups/${expense.groupId}/expenses'),
-          headers: {'Content-Type': 'application/json'},
+          Uri.parse('$_baseUrl/groups/${expense.groupId}/expenses'),
+          headers: headers,
           body: jsonEncode(body),
         )
         .timeout(_timeout);
@@ -80,15 +82,16 @@ class ApiExpenseRepository implements ExpenseRepository {
 
   @override
   Future<void> addGroup(Group group) async {
+    final headers = await ApiClient.authHeaders();
     final body = {
       'name': group.name,
-      'memberNames': group.members.map((m) => m.name).toList(),
+      'members': group.members.map((m) => {'name': m.name}).toList(),
     };
 
     final response = await http
         .post(
           Uri.parse('$_baseUrl/groups'),
-          headers: {'Content-Type': 'application/json'},
+          headers: headers,
           body: jsonEncode(body),
         )
         .timeout(_timeout);
@@ -97,10 +100,14 @@ class ApiExpenseRepository implements ExpenseRepository {
   }
 
   void _throwIfError(http.Response response) {
+    if (response.statusCode == 401) {
+      throw Exception('Sessão expirada. Faça login novamente.');
+    }
+    if (response.statusCode == 403) {
+      throw Exception('Você não tem acesso a esse recurso.');
+    }
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception(
-        'Erro na API (${response.statusCode}): ${response.body}',
-      );
+      throw Exception('Erro na API (${response.statusCode}): ${response.body}');
     }
   }
 }

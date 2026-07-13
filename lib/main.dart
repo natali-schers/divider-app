@@ -1,4 +1,5 @@
 import 'package:divider/config/app_router.dart';
+import 'package:divider/providers/auth_provider.dart';
 import 'package:divider/providers/expense_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -16,14 +17,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   return MultiProvider(
+    return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()..tryAutoLogin()),
         ChangeNotifierProvider(create: (_) => GroupProvider()..loadGroups()),
         ChangeNotifierProvider(create: (_) => ExpenseProvider()),
       ],
-      child: MaterialApp.router(
-        title: 'Divider App',
-        routerConfig: AppRouter.router,
+      child: Consumer<AuthProvider>(
+        builder: (context, authProvider, child) {
+          return MaterialApp.router(
+            title: 'Divider App',
+            routerConfig: AppRouter.router(authProvider),
+          );
+        },
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:divider/providers/auth_provider.dart';
 import 'package:divider/providers/group_provider.dart';
 import 'package:divider/widgets/loading_view.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,15 @@ class GroupListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Meus grupos')),
+      appBar: AppBar(
+        title: const Text('Meus grupos'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => context.read<AuthProvider>().logout(),
+          ),
+        ],
+      ),
       body: Consumer<GroupProvider>(
         builder: (context, groupProvider, child) {
           switch (groupProvider.status) {
