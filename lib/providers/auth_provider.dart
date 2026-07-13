@@ -24,24 +24,6 @@ class AuthProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get isLoading => _isLoading;
 
-  /// Verifica se já existe um token salvo (chamar ao iniciar o app).
-  Future<void> tryAutoLogin() async {
-    final savedToken = await _secureStorage.read(key: ApiClient.tokenKey);
-
-    if (savedToken == null) {
-      _status = AuthStatus.unauthenticated;
-      notifyListeners();
-      return;
-    }
-
-    // Nota: para simplificar, confiamos no token salvo sem revalidar
-    // contra a API aqui. Se o token estiver expirado, a primeira
-    // chamada autenticada vai falhar com 401 e trataremos isso then.
-    _token = savedToken;
-    _status = AuthStatus.authenticated;
-    notifyListeners();
-  }
-
   Future<bool> register({
     required String name,
     required String email,

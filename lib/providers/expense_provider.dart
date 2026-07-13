@@ -4,7 +4,7 @@ import '../models/settlement.dart';
 import '../repositories/expense_repository.dart';
 import '../repositories/expense_repository_factory.dart';
 import '../utils/balance_calculator.dart';
-import 'group_provider.dart';
+import '../models/load_status.dart';
 
 class ExpenseProvider extends ChangeNotifier {
   final ExpenseRepository _repository = ExpenseRepositoryFactory.create();

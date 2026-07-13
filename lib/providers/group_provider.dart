@@ -2,8 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../models/group.dart';
 import '../repositories/expense_repository.dart';
 import '../repositories/expense_repository_factory.dart';
-
-enum LoadStatus { initial, loading, success, error }
+import '../models/load_status.dart';
 
 class GroupProvider extends ChangeNotifier {
   final ExpenseRepository _repository = ExpenseRepositoryFactory.create();

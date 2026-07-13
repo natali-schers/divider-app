@@ -1,4 +1,4 @@
-import 'package:divider/providers/group_provider.dart';
+import 'package:divider/models/load_status.dart';
 import 'package:divider/widgets/loading_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
