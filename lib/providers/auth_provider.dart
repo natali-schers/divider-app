@@ -1,4 +1,6 @@
+import 'package:divider/models/auth_result.dart';
 import 'package:divider/repositories/api/api_client.dart';
+import 'package:divider/repositories/auth_repository_factory.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/user.dart';
@@ -7,7 +9,7 @@ import '../repositories/auth_repository.dart';
 enum AuthStatus { unknown, authenticated, unauthenticated }
 
 class AuthProvider extends ChangeNotifier {
-  final AuthRepository _authRepository = AuthRepository();
+  final AuthRepository _authRepository = AuthRepositoryFactory.create();
   final _secureStorage = const FlutterSecureStorage();
 
   AuthStatus _status = AuthStatus.unknown;
