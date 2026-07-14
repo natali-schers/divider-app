@@ -29,7 +29,7 @@ class _LoadingViewState extends State<LoadingView> {
   void initState() {
     super.initState();
 
-    _messageTimer = Timer.periodic(const Duration(milliseconds: 2500), (_) {
+    _messageTimer = Timer.periodic(const Duration(milliseconds: 5000), (_) {
       if (mounted) {
         setState(() {
           _messageIndex = (_messageIndex + 1) % _messages.length;
@@ -37,7 +37,7 @@ class _LoadingViewState extends State<LoadingView> {
       }
     });
 
-    _slowTimer = Timer(const Duration(seconds: 8), () {
+    _slowTimer = Timer(const Duration(seconds: 40), () {
       if (mounted) {
         setState(() => _showSlowMessage = true);
       }

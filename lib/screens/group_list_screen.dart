@@ -6,8 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class GroupListScreen extends StatelessWidget {
+class GroupListScreen extends StatefulWidget {
   const GroupListScreen({super.key});
+
+  @override
+  State<GroupListScreen> createState() => _GroupListScreenState();
+}
+
+class _GroupListScreenState extends State<GroupListScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<GroupProvider>().loadGroups();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +51,7 @@ class GroupListScreen extends StatelessWidget {
             case LoadStatus.success:
               if (groupProvider.groups.isEmpty) {
                 return const Center(child: Text('Nenhum grupo encontrado.'));
-              }
+              }        
               return ListView.builder(
                 itemCount: groupProvider.groups.length,
                 itemBuilder: (context, index) {
