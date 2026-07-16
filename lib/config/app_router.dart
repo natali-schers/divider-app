@@ -14,10 +14,11 @@ class AppRouter {
 
   static GoRouter router(AuthProvider authProvider) {
     return GoRouter(
-      initialLocation: '/',
+      initialLocation: '/login',
       refreshListenable: authProvider,
       redirect: (context, state) {
         final isAuthenticated = authProvider.status == AuthStatus.authenticated;
+
         final isGoingToAuth =
             state.matchedLocation == '/login' ||
             state.matchedLocation == '/register';

@@ -5,7 +5,7 @@ import 'package:divider/repositories/auth_repository.dart';
 import 'package:http/http.dart' as http;
 
 class ApiAuthRepository implements AuthRepository {
-  static const _timeout = Duration(seconds: 60);
+  static const _timeout = Duration(seconds: 120);
 
   String get _baseUrl => AppConfig.apiBaseUrl;
 
