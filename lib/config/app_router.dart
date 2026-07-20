@@ -1,5 +1,6 @@
 import 'package:divider/providers/auth_provider.dart';
 import 'package:divider/screens/login_screen.dart';
+import 'package:divider/screens/profile_screen.dart';
 import 'package:divider/screens/register_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../models/group.dart';
@@ -39,6 +40,10 @@ class AppRouter {
           path: '/register',
           name: 'register',
           builder: (context, state) => const RegisterScreen(),
+        ),
+        GoRoute(
+          path: '/profile', name: 'profile', 
+          builder: (context, state) => const ProfileScreen()
         ),
         GoRoute(
           path: '/',

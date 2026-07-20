@@ -27,7 +27,11 @@ class _GroupListScreenState extends State<GroupListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meus grupos'),
-        actions: [
+        actions: [          
+          IconButton(
+            onPressed: () => context.pushNamed('profile'),
+            icon: const Icon(Icons.person),
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => context.read<AuthProvider>().logout(),
@@ -51,7 +55,8 @@ class _GroupListScreenState extends State<GroupListScreen> {
             case LoadStatus.success:
               if (groupProvider.groups.isEmpty) {
                 return const Center(child: Text('Nenhum grupo encontrado.'));
-              }        
+              }     
+                 
               return ListView.builder(
                 itemCount: groupProvider.groups.length,
                 itemBuilder: (context, index) {
