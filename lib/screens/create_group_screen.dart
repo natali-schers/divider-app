@@ -126,10 +126,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _saveGroup,
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.0),
-                  child: Text('Salvar grupo'),
-                ),
+                child: Text('Salvar grupo'),
               ),
             ),
           ],
