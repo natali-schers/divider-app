@@ -1,4 +1,5 @@
 import 'package:divider/config/app_router.dart';
+import 'package:divider/config/app_theme.dart';
 import 'package:divider/providers/auth_provider.dart';
 import 'package:divider/providers/expense_provider.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         builder: (context, authProvider, child) {
           return MaterialApp.router(
             title: 'Divider App',
+            theme: AppTheme.light,
             routerConfig: AppRouter.router(authProvider),
           );
         },
