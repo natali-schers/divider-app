@@ -28,40 +28,39 @@ class AuthProvider extends ChangeNotifier {
     required String name,
     required String email,
     required String password,
-  }) async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
-
-    try {
-      final result = await _authRepository.register(
-        name: name,
-        email: email,
-        password: password,
-      );
-      await _persistSession(result);
-      return true;
-    } catch (e) {
-      _errorMessage = e.toString().replaceFirst('Exception: ', '');
-      return false;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+  }) {
+    return _runAuthAction(
+      () => _authRepository.register(name: name, email: email, password: password),
+    );
   }
 
-  Future<bool> login({required String email, required String password}) async {
+  Future<bool> login({required String email, required String password}) {
+    return _runAuthAction(
+      () => _authRepository.login(email: email, password: password),
+    );
+  }
+
+  Future<bool> _runAuthAction(Future<AuthResult> Function() action) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final result = await _authRepository.login(email: email, password: password);
+      final result = await action();
       await _persistSession(result);
       return true;
-    } catch (e) {
-      _errorMessage = e.toString().replaceFirst('Exception: ', '');
-      return false;
+    } catch (_) {
+
+      notifyListeners();
+
+      try {
+        final result = await action();
+        await _persistSession(result);
+        return true;
+      } catch (e) {
+        _errorMessage = e.toString().replaceFirst('Exception: ', '');
+        return false;
+      }
     } finally {
       _isLoading = false;
       notifyListeners();

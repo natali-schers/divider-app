@@ -51,7 +51,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Consumer<AuthProvider>(
             builder: (context, authProvider, child) {
               return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.stretch,                
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Divider',
