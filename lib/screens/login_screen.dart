@@ -44,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
             builder: (context, authProvider, child) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const SizedBox(height: 24),
                   Text(
