@@ -1,5 +1,5 @@
 {
-  "buildCommand": "flutter build web",
-  "outputDirectory": "build/web",
-  "installCommand": "git clone https://github.com/flutter/flutter.git --depth 1 -b stable _flutter && export PATH=\"$PATH:`pwd`/_flutter/bin\" && flutter doctor"
+  "installCommand": "echo 'skip'",
+  "buildCommand": "git clone https://github.com/flutter/flutter.git --depth 1 -b stable _flutter && export PATH=\"$PATH:`pwd`/_flutter/bin\" && flutter doctor && flutter build web",
+  "outputDirectory": "build/web"
 }
