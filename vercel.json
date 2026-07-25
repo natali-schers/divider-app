@@ -1,5 +1,4 @@
 {
-  "installCommand": "echo 'skip'",
-  "buildCommand": "git clone https://github.com/flutter/flutter.git --depth 1 -b stable _flutter && export PATH=\"$PATH:`pwd`/_flutter/bin\" && flutter doctor && flutter build web",
+  "buildCommand": "git clone https://github.com/flutter/flutter.git --depth 1 -b 3.44.0 _flutter && export PATH=\"$PATH:`pwd`/_flutter/bin\" && printf \"USE_MOCK_DATA=%s\\nAPI_BASE_URL=%s\\n\" \"$USE_MOCK_DATA\" \"$API_BASE_URL\" > .env && flutter doctor && flutter build web",
   "outputDirectory": "build/web"
 }
