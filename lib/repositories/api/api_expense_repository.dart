@@ -85,7 +85,7 @@ class ApiExpenseRepository implements ExpenseRepository {
     final headers = await ApiClient.authHeaders();
     final body = {
       'name': group.name,
-      'members': group.members.map((m) => {'name': m.name}).toList(),
+      'members': group.members.map((m) => {'inviteEmail': m.inviteEmail}).toList(),
     };
 
     final response = await http

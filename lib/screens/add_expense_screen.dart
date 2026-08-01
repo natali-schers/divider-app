@@ -100,7 +100,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             const SizedBox(height: 8),
             ...widget.group.members.map((member) {
               return RadioListTile<Member>(
-                title: Text(member.name),
+                title: Text(member.user?.name ?? member.inviteEmail ?? 'Membro desconhecido'),
                 value: member,
                 groupValue: _selectedPayer,
                 onChanged: (value) {

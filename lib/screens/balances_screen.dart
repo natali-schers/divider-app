@@ -41,7 +41,7 @@ class BalancesScreen extends StatelessWidget {
 
               return ListTile(
                 leading: const Icon(Icons.arrow_forward),
-                title: Text('${from.name} paga ${to.name}'),
+                title: Text('${from.user?.name ?? from.inviteEmail ?? 'Membro desconhecido'} paga ${to.user?.name ?? to.inviteEmail ?? 'Membro desconhecido'}'),
                 trailing: Text(
                   currencyFormat.format(settlement.amount),
                   style: const TextStyle(fontWeight: FontWeight.bold),
