@@ -16,22 +16,22 @@ class CreateGroupScreen extends StatefulWidget {
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final _groupNameController = TextEditingController();
   final List<String> _memberNames = [];
-  final _memberNameController = TextEditingController();
+  final _memberEmailController = TextEditingController();
 
   @override
   void dispose() {
     _groupNameController.dispose();
-    _memberNameController.dispose();
+    _memberEmailController.dispose();
     super.dispose();
   }
 
   void _addMember() {
-    final name = _memberNameController.text.trim();
+    final name = _memberEmailController.text.trim();
     if (name.isEmpty) return;
 
     setState(() {
       _memberNames.add(name);
-      _memberNameController.clear();
+      _memberEmailController.clear();
     });
   }
 
@@ -57,7 +57,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     final group = Group(
       id: uuid.v4(),
       name: groupName,
-      members: _memberNames.map((name) => Member(id: uuid.v4(), name: name)).toList(),
+      members: _memberNames.map((inviteEmail) => Member(id: uuid.v4(), inviteEmail: inviteEmail)).toList(),
     );
 
     await context.read<GroupProvider>().createGroup(group);
@@ -92,9 +92,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: _memberNameController,
+                    controller: _memberEmailController,
                     decoration: const InputDecoration(
-                      labelText: 'Nome do membro',
+                      labelText: 'Email do membro',
                       border: OutlineInputBorder(),
                     ),
                     onSubmitted: (_) => _addMember(),

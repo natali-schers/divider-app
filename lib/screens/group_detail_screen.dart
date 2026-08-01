@@ -90,7 +90,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                         );
                         return ListTile(
                           title: Text(expense.description),
-                          subtitle: Text('Pago por ${payer.user.name}'),
+                          subtitle: Text('Pago por ${payer.user?.name?? payer.inviteEmail ?? 'Membro desconhecido'}'),
                           trailing: Text(currencyFormat.format(expense.amount)),
                         );
                       },

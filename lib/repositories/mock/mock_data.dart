@@ -1,3 +1,5 @@
+import 'package:divider/models/user.dart';
+
 import '../../models/group.dart';
 import '../../models/member.dart';
 import '../../models/expense.dart';
@@ -7,9 +9,9 @@ import '../../models/split_type.dart';
 class MockData {
   MockData._();
 
-  static final member1 = Member(id: 'm1', name: 'Ana');
-  static final member2 = Member(id: 'm2', name: 'Bruno');
-  static final member3 = Member(id: 'm3', name: 'Carla');
+  static final member1 = Member(id: 'm1', user: User(id: 'u1', name: 'Alice', email: 'alice@example.com'), inviteEmail: null);
+  static final member2 = Member(id: 'm2', user: null, inviteEmail: 'bruno@example.com');
+  static final member3 = Member(id: 'm3', user: User(id: 'u3', name: 'Carla', email: 'carla@example.com'), inviteEmail: null);
 
   static final groups = [
     Group(
