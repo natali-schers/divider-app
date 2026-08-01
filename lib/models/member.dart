@@ -1,23 +1,29 @@
+import 'package:divider/models/user.dart';
+
 class Member {
   final String id;
-  final String name;
+  final User user;
+  final String inviteEmail;
 
   Member({
     required this.id,
-    required this.name,
+    required this.user,
+    required this.inviteEmail,
   });
 
   factory Member.fromJson(Map<String, dynamic> json) {
     return Member(
       id: json['id'] as String,
-      name: json['name'] as String,
+      user: User.fromJson(json['user'] as Map<String, dynamic>),
+      inviteEmail: json['inviteEmail'] as String,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      'user': user.toJson(),
+      'inviteEmail': inviteEmail,
     };
   }
 }

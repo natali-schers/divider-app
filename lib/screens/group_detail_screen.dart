@@ -57,9 +57,11 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
               return const Center(child: LoadingView());
 
             case LoadStatus.error:
+              debugPrint('Erro ao carregar despesas: ${expenseProvider.errorMessage}');
+
               return Center(
                 child: Text(
-                  'Erro ao carregar despesas: ${expenseProvider.errorMessage}',
+                  'Erro ao carregar despesas. Tente novamente mais tarde!',
                 ),
               );
 
@@ -88,7 +90,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                         );
                         return ListTile(
                           title: Text(expense.description),
-                          subtitle: Text('Pago por ${payer.name}'),
+                          subtitle: Text('Pago por ${payer.user.name}'),
                           trailing: Text(currencyFormat.format(expense.amount)),
                         );
                       },

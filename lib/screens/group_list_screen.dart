@@ -46,9 +46,11 @@ class _GroupListScreenState extends State<GroupListScreen> {
               return const Center(child: LoadingView());
 
             case LoadStatus.error:
+              debugPrint('Erro ao carregar grupos: ${groupProvider.errorMessage}');
+
               return Center(
                 child: Text(
-                  'Erro ao carregar grupos: ${groupProvider.errorMessage}',
+                  'Erro ao carregar grupos. Tente novamente mais tarde!',
                 ),
               );
 
