@@ -29,6 +29,10 @@ class _PendingInvitesScreenState extends State<PendingInvitesScreen> {
       appBar: AppBar(title: const Text('Convites pendentes')),
       body: Consumer<MemberProvider>(
         builder: (context, memberProvider, child) {
+          if (memberProvider.status == LoadStatus.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
           if (memberProvider.pendingInvites.isEmpty) {
             return const Center(
               child: Text('Nenhum convite pendente.'),

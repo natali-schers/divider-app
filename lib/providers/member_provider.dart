@@ -23,7 +23,8 @@ class MemberProvider extends ChangeNotifier {
     try {
       _pendingInvites = await _memberRepository.getPendingInvites();
       _status = LoadStatus.success;
-    } catch (e) {
+    }
+    catch (e) {
       _status = LoadStatus.error;
       _errorMessage = e.toString();
     }
@@ -32,10 +33,18 @@ class MemberProvider extends ChangeNotifier {
   }
 
   Future<void> claimMember(String memberId) async {
+    _status = LoadStatus.loading;
+    notifyListeners();
+
     try {
       await _memberRepository.claimMember(memberId);
-    } catch (e) {
-      rethrow;
+      await getPendingInvites();
+    } 
+    catch (e) {
+      _errorMessage = e.toString();
+      _status = LoadStatus.error;
     }
+
+    notifyListeners();
   }
 }
