@@ -1,3 +1,4 @@
+import 'package:divider/models/pending_invite.dart';
 import 'package:divider/models/user.dart';
 
 import '../../models/group.dart';
@@ -55,5 +56,10 @@ class MockData {
         ExpenseSplit(memberId: 'm3', amount: 50.0),
       ],
     ),
+  ];
+
+  static final pendingInvites = [
+    PendingInvite(memberId: 'm2', groupId: 'g1', groupName: 'Viagem Floripa'),
+    PendingInvite(memberId: 'm2', groupId: 'g2', groupName: 'Jantar Amigos'),
   ];
 }

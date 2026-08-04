@@ -1,3 +1,4 @@
+import 'package:divider/models/load_status.dart';
 import 'package:divider/providers/expense_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -70,6 +71,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final expenseProvider = context.watch<ExpenseProvider>();
+    final isSaving = expenseProvider.status == LoadStatus.loading;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nova despesa'),
@@ -119,11 +123,20 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _saveExpense,
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.0),
-                  child: Text('Salvar despesa'),
-                ),
+                onPressed: isSaving ? null : _saveExpense,
+                child: isSaving
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12.0),
+                        child: Text('Salvar despesa'),
+                      ),
               ),
             ),
           ],

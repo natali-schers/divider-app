@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../models/group.dart';
+import '../models/load_status.dart';
 import '../models/member.dart';
 import '../providers/group_provider.dart';
 
@@ -69,6 +70,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final groupProvider = context.watch<GroupProvider>();
+    final isSaving = groupProvider.status == LoadStatus.loading;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Novo grupo'),
@@ -125,8 +129,17 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _saveGroup,
-                child: Text('Salvar grupo'),
+                onPressed: isSaving ? null : _saveGroup,
+                child: isSaving
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text('Salvar grupo'),
               ),
             ),
           ],

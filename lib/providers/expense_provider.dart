@@ -43,8 +43,18 @@ class ExpenseProvider extends ChangeNotifier {
   }
 
   Future<void> createExpense(Expense expense) async {
-    await _repository.addExpense(expense);
-    await _forceReload(expense.groupId);
+    _status = LoadStatus.loading;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      await _repository.addExpense(expense);
+      await _forceReload(expense.groupId);
+    } catch (e) {
+      _errorMessage = e.toString();
+      _status = LoadStatus.error;
+      notifyListeners();
+    }
   }
 
   Future<void> _forceReload(String groupId) async {
