@@ -27,7 +27,11 @@ class _GroupListScreenState extends State<GroupListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meus grupos'),
-        actions: [          
+        actions: [      
+          IconButton(
+            onPressed: () => context.pushNamed('pendingInvites'),
+            icon: const Icon(Icons.mail),
+          ),    
           IconButton(
             onPressed: () => context.pushNamed('profile'),
             icon: const Icon(Icons.person),

@@ -31,7 +31,17 @@ class GroupProvider extends ChangeNotifier {
   }
 
   Future<void> createGroup(Group group) async {
-    await _repository.addGroup(group);
-    await loadGroups();
+    _status = LoadStatus.loading;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      await _repository.addGroup(group);
+      await loadGroups();
+    } catch (e) {
+      _errorMessage = e.toString();
+      _status = LoadStatus.error;
+      notifyListeners();
+    }
   }
 }

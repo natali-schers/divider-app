@@ -1,5 +1,6 @@
 import 'package:divider/providers/auth_provider.dart';
 import 'package:divider/screens/login_screen.dart';
+import 'package:divider/screens/pending_invites_screen.dart';
 import 'package:divider/screens/profile_screen.dart';
 import 'package:divider/screens/register_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -54,6 +55,11 @@ class AppRouter {
           path: '/create-group',
           name: 'createGroup',
           builder: (context, state) => const CreateGroupScreen(),
+        ),
+        GoRoute(
+          path: '/pending-invites',
+          name: 'pendingInvites',
+          builder: (context, state) => const PendingInvitesScreen(),
         ),
         GoRoute(
           path: '/group/:groupId',
