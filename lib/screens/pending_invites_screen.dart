@@ -1,4 +1,5 @@
 import 'package:divider/models/load_status.dart';
+import 'package:divider/providers/group_provider.dart';
 import 'package:divider/providers/member_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +20,15 @@ class _PendingInvitesScreenState extends State<PendingInvitesScreen> {
     });
   }
 
-  void _acceptInvite(String memberId) {
-    context.read<MemberProvider>().claimMember(memberId);
+  Future<void> _acceptInvite(String memberId) async {
+    final memberProvider = context.read<MemberProvider>();
+    final groupProvider = context.read<GroupProvider>();
+
+    await memberProvider.claimMember(memberId);
+
+    if (memberProvider.status != LoadStatus.error) {
+      await groupProvider.loadGroups();
+    }
   }
 
   @override
@@ -47,8 +55,8 @@ class _PendingInvitesScreenState extends State<PendingInvitesScreen> {
               return ListTile(
                 title: Text(pendingInvite.groupName),
                 trailing: ElevatedButton(
-                  onPressed: () {
-                    _acceptInvite(pendingInvite.memberId);
+                  onPressed: () async {
+                    await _acceptInvite(pendingInvite.memberId);
                   },
                   child: memberProvider.status == LoadStatus.loading
                       ? const SizedBox(
