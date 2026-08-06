@@ -16,7 +16,7 @@ class CreateGroupScreen extends StatefulWidget {
 
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final _groupNameController = TextEditingController();
-  final List<String> _memberNames = [];
+  final List<String> _memberEmails = [];
   final _memberEmailController = TextEditingController();
 
   @override
@@ -31,21 +31,21 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     if (name.isEmpty) return;
 
     setState(() {
-      _memberNames.add(name);
+      _memberEmails.add(name);
       _memberEmailController.clear();
     });
   }
 
   void _removeMember(int index) {
     setState(() {
-      _memberNames.removeAt(index);
+      _memberEmails.removeAt(index);
     });
   }
 
   Future<void> _saveGroup() async {
     final groupName = _groupNameController.text.trim();
 
-    if (groupName.isEmpty || _memberNames.length < 2) {
+    if (groupName.isEmpty || _memberEmails.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Informe um nome de grupo e ao menos 2 membros.'),
@@ -58,7 +58,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     final group = Group(
       id: uuid.v4(),
       name: groupName,
-      members: _memberNames.map((inviteEmail) => Member(id: uuid.v4(), inviteEmail: inviteEmail)).toList(),
+      members: _memberEmails.map((inviteEmail) => Member(id: uuid.v4(), inviteEmail: inviteEmail)).toList(),
     );
 
     await context.read<GroupProvider>().createGroup(group);
@@ -114,10 +114,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             const SizedBox(height: 8),
             Expanded(
               child: ListView.builder(
-                itemCount: _memberNames.length,
+                itemCount: _memberEmails.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(_memberNames[index]),
+                    title: Text(_memberEmails[index]),
                     trailing: IconButton(
                       icon: const Icon(Icons.remove_circle_outline),
                       onPressed: () => _removeMember(index),
