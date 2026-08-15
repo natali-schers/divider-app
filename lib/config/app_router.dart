@@ -3,6 +3,7 @@ import 'package:divider/screens/login_screen.dart';
 import 'package:divider/screens/pending_invites_screen.dart';
 import 'package:divider/screens/profile_screen.dart';
 import 'package:divider/screens/register_screen.dart';
+import 'package:divider/screens/splash_screen.dart';
 import 'package:go_router/go_router.dart';
 import '../models/group.dart';
 import '../screens/group_list_screen.dart';
@@ -16,7 +17,7 @@ class AppRouter {
 
   static GoRouter router(AuthProvider authProvider) {
     return GoRouter(
-      initialLocation: '/login',
+      initialLocation: '/divider',
       refreshListenable: authProvider,
       redirect: (context, state) {
         final isAuthenticated = authProvider.status == AuthStatus.authenticated;
@@ -25,6 +26,7 @@ class AppRouter {
             state.matchedLocation == '/login' ||
             state.matchedLocation == '/register';
 
+        if (state.matchedLocation == '/divider') return null;
         if (authProvider.status == AuthStatus.unknown) return null;
         if (!isAuthenticated && !isGoingToAuth) return '/login';
         if (isAuthenticated && isGoingToAuth) return '/';
@@ -60,6 +62,11 @@ class AppRouter {
           path: '/pending-invites',
           name: 'pendingInvites',
           builder: (context, state) => const PendingInvitesScreen(),
+        ),
+        GoRoute(
+          path: '/divider',
+          name: 'divider',
+          builder: (context, state) => const SplashScreen(),
         ),
         GoRoute(
           path: '/group/:groupId',
