@@ -39,13 +39,11 @@ class _PendingInvitesScreenState extends State<PendingInvitesScreen> {
       body: Consumer<MemberProvider>(
         builder: (context, memberProvider, child) {
           if (memberProvider.status == LoadStatus.loading) {
-            return const Expanded(flex: 0, child: LoadingView());
+            return const Center(child: LoadingView());
           }
 
           if (memberProvider.pendingInvites.isEmpty) {
-            return const Center(
-              child: Text('Nenhum convite pendente.'),
-            );
+            return const Center(child: Text('Nenhum convite pendente.'));
           }
 
           return ListView.builder(
@@ -63,9 +61,7 @@ class _PendingInvitesScreenState extends State<PendingInvitesScreen> {
                       ? const SizedBox(
                           width: 16,
                           height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                          ),
+                          child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Text('Aceitar'),
                 ),
