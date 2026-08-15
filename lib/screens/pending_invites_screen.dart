@@ -1,6 +1,7 @@
 import 'package:divider/models/load_status.dart';
 import 'package:divider/providers/group_provider.dart';
 import 'package:divider/providers/member_provider.dart';
+import 'package:divider/widgets/loading_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +39,7 @@ class _PendingInvitesScreenState extends State<PendingInvitesScreen> {
       body: Consumer<MemberProvider>(
         builder: (context, memberProvider, child) {
           if (memberProvider.status == LoadStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Expanded(flex: 0, child: LoadingView());
           }
 
           if (memberProvider.pendingInvites.isEmpty) {
@@ -64,7 +65,6 @@ class _PendingInvitesScreenState extends State<PendingInvitesScreen> {
                           height: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: Colors.white,
                           ),
                         )
                       : const Text('Aceitar'),

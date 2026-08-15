@@ -58,7 +58,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     final group = Group(
       id: uuid.v4(),
       name: groupName,
-      members: _memberEmails.map((inviteEmail) => Member(id: uuid.v4(), inviteEmail: inviteEmail)).toList(),
+      members: _memberEmails
+          .map((inviteEmail) => Member(id: uuid.v4(), inviteEmail: inviteEmail))
+          .toList(),
     );
 
     await context.read<GroupProvider>().createGroup(group);
@@ -74,9 +76,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     final isSaving = groupProvider.status == LoadStatus.loading;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Novo grupo'),
-      ),
+      appBar: AppBar(title: const Text('Novo grupo')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -112,20 +112,20 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               ],
             ),
             const SizedBox(height: 8),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _memberEmails.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_memberEmails[index]),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.remove_circle_outline),
-                      onPressed: () => _removeMember(index),
-                    ),
-                  );
-                },
-              ),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: _memberEmails.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_memberEmails[index]),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.remove_circle_outline),
+                    onPressed: () => _removeMember(index),
+                  ),
+                );
+              },
             ),
+            const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -134,10 +134,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     ? const SizedBox(
                         width: 18,
                         height: 18,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
+                        child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Text('Salvar grupo'),
               ),

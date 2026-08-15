@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:divider/models/auth_result.dart';
 import 'package:divider/repositories/api/api_client.dart';
 import 'package:divider/repositories/auth_repository_factory.dart';
@@ -24,13 +25,31 @@ class AuthProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get isLoading => _isLoading;
 
+  Future<void> tryAutoLogin() async {
+    final savedToken = await _secureStorage.read(key: ApiClient.tokenKey);
+
+    if (savedToken == null) {
+      _status = AuthStatus.unauthenticated;
+      notifyListeners();
+      return;
+    }
+
+    _token = savedToken;
+    _status = AuthStatus.authenticated;
+    notifyListeners();
+  }
+
   Future<bool> register({
     required String name,
     required String email,
     required String password,
   }) {
     return _runAuthAction(
-      () => _authRepository.register(name: name, email: email, password: password),
+      () => _authRepository.register(
+        name: name,
+        email: email,
+        password: password,
+      ),
     );
   }
 
@@ -46,24 +65,25 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await action();
+      final result = await _attemptWithRetry(action);
       await _persistSession(result);
       return true;
-    } catch (_) {
-
-      notifyListeners();
-
-      try {
-        final result = await action();
-        await _persistSession(result);
-        return true;
-      } catch (e) {
-        _errorMessage = e.toString().replaceFirst('Exception: ', '');
-        return false;
-      }
+    } catch (e) {
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
+      return false;
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<AuthResult> _attemptWithRetry(
+    Future<AuthResult> Function() action,
+  ) async {
+    try {
+      return await action();
+    } on TimeoutException {
+      return await action();
     }
   }
 

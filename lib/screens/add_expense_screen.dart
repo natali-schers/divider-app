@@ -36,7 +36,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     final amountText = _amountController.text.trim().replaceAll(',', '.');
     final amount = double.tryParse(amountText);
 
-    if (description.isEmpty || amount == null || amount <= 0 || _selectedPayer == null) {
+    if (description.isEmpty ||
+        amount == null ||
+        amount <= 0 ||
+        _selectedPayer == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Preencha descrição, valor válido e quem pagou.'),
@@ -58,7 +61,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       date: DateTime.now(),
       splitType: SplitType.equal,
       splits: members
-          .map((member) => ExpenseSplit(memberId: member.id, amount: splitAmount))
+          .map(
+            (member) => ExpenseSplit(memberId: member.id, amount: splitAmount),
+          )
           .toList(),
     );
 
@@ -75,9 +80,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     final isSaving = expenseProvider.status == LoadStatus.loading;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Nova despesa'),
-      ),
+      appBar: AppBar(title: const Text('Nova despesa')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -93,7 +96,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             const SizedBox(height: 16),
             TextField(
               controller: _amountController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(
                 labelText: 'Valor (R\$)',
                 border: OutlineInputBorder(),
@@ -104,7 +109,11 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             const SizedBox(height: 8),
             ...widget.group.members.map((member) {
               return RadioListTile<Member>(
-                title: Text(member.user?.name ?? member.inviteEmail ?? 'Membro desconhecido'),
+                title: Text(
+                  member.user?.name ??
+                      member.inviteEmail ??
+                      'Membro desconhecido',
+                ),
                 value: member,
                 groupValue: _selectedPayer,
                 onChanged: (value) {
@@ -126,17 +135,11 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 onPressed: isSaving ? null : _saveExpense,
                 child: isSaving
                     ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12.0),
-                        child: Text('Salvar despesa'),
-                      ),
+                    : const Text('Salvar despesa'),
               ),
             ),
           ],
