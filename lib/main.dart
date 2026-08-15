@@ -3,6 +3,7 @@ import 'package:divider/config/app_theme.dart';
 import 'package:divider/providers/auth_provider.dart';
 import 'package:divider/providers/expense_provider.dart';
 import 'package:divider/providers/member_provider.dart';
+import 'package:divider/providers/warmup_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => WarmupProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => GroupProvider()),
         ChangeNotifierProvider(create: (_) => ExpenseProvider()),

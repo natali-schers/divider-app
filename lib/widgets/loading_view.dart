@@ -17,6 +17,9 @@ class _LoadingViewState extends State<LoadingView> {
     'Chamando a calculadora...',
     'Verificando se ninguém está devendo o dinheiro da pizza...',
     'Calculando o valor do cafezinho...',
+    'Procurando moedas perdidas no sofá...',
+    'Tentando lembrar quem ficou com a conta do Uber...',
+    'Verificando se alguém está tentando fugir da conta...',
   ];
 
   int _messageIndex = 0;
@@ -37,7 +40,7 @@ class _LoadingViewState extends State<LoadingView> {
       }
     });
 
-    _slowTimer = Timer(const Duration(seconds: 40), () {
+    _slowTimer = Timer(const Duration(seconds: 90), () {
       if (mounted) {
         setState(() => _showSlowMessage = true);
       }
@@ -57,7 +60,6 @@ class _LoadingViewState extends State<LoadingView> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CircularProgressIndicator(),
           const SizedBox(height: 16),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
