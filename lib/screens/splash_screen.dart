@@ -1,3 +1,4 @@
+import 'package:divider/providers/auth_provider.dart';
 import 'package:divider/providers/warmup_provider.dart';
 import 'package:divider/widgets/loading_view.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _initialize() async {
     final warmup = context.read<WarmupProvider>();
+    final authProvider = context.read<AuthProvider>();
 
     await Future.wait([
       warmup
@@ -29,7 +31,12 @@ class _SplashScreenState extends State<SplashScreen> {
     ]);
 
     if (!mounted) return;
-    context.go('/login');
+
+    if (authProvider.status == AuthStatus.authenticated) {
+      context.go('/');
+    } else {
+      context.go('/login');
+    }
   }
 
   @override
