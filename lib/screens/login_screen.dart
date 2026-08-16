@@ -76,7 +76,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             decoration: InputDecoration(
                               labelText: 'Senha',
                               suffixIcon: IconButton(
-                                padding: const EdgeInsets.only(right: 8.0),
                                 icon: _obscureText
                                     ? const Icon(Icons.visibility)
                                     : const Icon(Icons.visibility_off),

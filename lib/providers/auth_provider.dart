@@ -25,20 +25,6 @@ class AuthProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get isLoading => _isLoading;
 
-  Future<void> tryAutoLogin() async {
-    final savedToken = await _secureStorage.read(key: ApiClient.tokenKey);
-
-    if (savedToken == null) {
-      _status = AuthStatus.unauthenticated;
-      notifyListeners();
-      return;
-    }
-
-    _token = savedToken;
-    _status = AuthStatus.authenticated;
-    notifyListeners();
-  }
-
   Future<bool> register({
     required String name,
     required String email,
