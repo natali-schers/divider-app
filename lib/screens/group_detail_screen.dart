@@ -93,7 +93,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                             child: ListView.separated(
                               padding: const EdgeInsets.fromLTRB(20, 8, 20, 96),
                               itemCount: expenses.length + 1,
-                              separatorBuilder: (_, __) =>
+                              separatorBuilder: (_, _) =>
                                   const SizedBox(height: 12),
                               itemBuilder: (context, index) {
                                 if (index == 0) {
@@ -147,9 +147,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final count = group.members.length;
-
+    
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
       child: Row(
