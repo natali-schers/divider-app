@@ -77,7 +77,7 @@ class _PendingInvitesScreenState extends State<PendingInvitesScreen> {
                           icon: Icons.mark_email_read_outlined,
                           title: 'Nenhum convite pendente',
                           subtitle:
-                              'Quando alguém convidar você para um grupo, o convite aparece aqui.',
+                              'Quando alguém convidar você para um grupo, o convite aparecerá aqui.',
                         );
                       }
 
@@ -121,12 +121,10 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           IconButton.filledTonal(
             tooltip: 'Voltar',
@@ -134,19 +132,10 @@ class _Header extends StatelessWidget {
             icon: const Icon(Icons.arrow_back),
           ),
           const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 4),
-                Text(
-                  'Convites pendentes',
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: scheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
+          Text(
+            'Convites pendentes',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
