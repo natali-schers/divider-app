@@ -39,99 +39,107 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Consumer<AuthProvider>(
-            builder: (context, authProvider, child) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const SizedBox(height: 24),
-                  Text(
-                    'Divider',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: const InputDecoration(
-                              labelText: 'Email',
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          TextField(
-                            controller: _passwordController,
-                            obscureText: _obscureText,
-                            decoration: InputDecoration(
-                              labelText: 'Senha',
-                              suffixIcon: IconButton(
-                                icon: _obscureText
-                                    ? const Icon(Icons.visibility)
-                                    : const Icon(Icons.visibility_off),
-                                onPressed: () {
-                                  setState(() {
-                                    _obscureText = !_obscureText;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                          if (authProvider.errorMessage != null) ...[
-                            const SizedBox(height: 16),
+        child: Consumer<AuthProvider>(
+          builder: (context, authProvider, child) {
+            return Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
                             Text(
-                              authProvider.errorMessage!,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.error,
+                              'Divider',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headlineMedium
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            const SizedBox(height: 32),
+                            TextField(
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              textInputAction: TextInputAction.next,
+                              decoration: const InputDecoration(
+                                labelText: 'Email',
                               ),
+                            ),
+                            const SizedBox(height: 16),
+                            TextField(
+                              controller: _passwordController,
+                              obscureText: _obscureText,
+                              textInputAction: TextInputAction.done,
+                              onSubmitted: (_) => _submit(),
+                              decoration: InputDecoration(
+                                labelText: 'Senha',
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscureText
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () => setState(
+                                    () => _obscureText = !_obscureText,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            if (authProvider.errorMessage != null) ...[
+                              const SizedBox(height: 16),
+                              Text(
+                                authProvider.errorMessage!,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
+                              ),
+                            ],
+                            const SizedBox(height: 24),
+                            ElevatedButton(
+                              onPressed: authProvider.isLoading
+                                  ? null
+                                  : _submit,
+                              child: authProvider.isLoading
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : const Text('Fazer login'),
+                            ),
+                            const SizedBox(height: 16),
+                            TextButton(
+                              onPressed: () => context.push('/register'),
+                              child: const Text('Criar uma conta'),
                             ),
                           ],
-                          const SizedBox(height: 24),
-                          ElevatedButton(
-                            onPressed: authProvider.isLoading ? null : _submit,
-                            child: authProvider.isLoading
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : const Text('Fazer login'),
-                          ),
-                          const SizedBox(height: 16),
-                          TextButton(
-                            onPressed: () => context.push('/register'),
-                            child: const Text('Criar uma conta'),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Text(
-                      'By natali-schers',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    'By natali-schers',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.outline,
                     ),
                   ),
-                ],
-              );
-            },
-          ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
