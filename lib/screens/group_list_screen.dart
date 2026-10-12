@@ -136,7 +136,7 @@ class _Header extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   'Meus grupos',
-                  style: theme.textTheme.headlineMedium?.copyWith(
+                  style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
