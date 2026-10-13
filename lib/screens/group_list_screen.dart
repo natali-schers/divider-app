@@ -120,7 +120,6 @@ class _Header extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             child: Column(
@@ -148,6 +147,13 @@ class _Header extends StatelessWidget {
             tooltip: 'Convites',
             onPressed: () => context.pushNamed('pendingInvites'),
             icon: const Icon(Icons.mail_outline),
+            style: IconButton.styleFrom(
+              fixedSize: const Size(44, 44),
+              minimumSize: const Size(44, 44),
+              padding: EdgeInsets.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              visualDensity: VisualDensity.standard,
+            ),
           ),
           const SizedBox(width: 8),
           _ProfileAvatar(name: userName),
@@ -180,7 +186,7 @@ class _ProfileAvatar extends StatelessWidget {
         customBorder: const CircleBorder(),
         onTap: () => context.pushNamed('profile'),
         child: CircleAvatar(
-          radius: 20,
+          radius: 22,
           backgroundColor: scheme.primary,
           foregroundColor: scheme.onPrimary,
           child: Text(
