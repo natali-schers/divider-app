@@ -1,6 +1,7 @@
 import 'package:divider/models/load_status.dart';
 import 'package:divider/providers/auth_provider.dart';
 import 'package:divider/providers/group_provider.dart';
+import 'package:divider/providers/member_provider.dart';
 import 'package:divider/widgets/loading_view.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +20,7 @@ class _GroupListScreenState extends State<GroupListScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<GroupProvider>().loadGroups();
+      context.read<MemberProvider>().getPendingInvites();
     });
   }
 
@@ -113,6 +115,9 @@ class _Header extends StatelessWidget {
     final userName = context.select<AuthProvider, String?>(
       (auth) => auth.currentUser?.name,
     );
+    final hasPendingInvites = context.select<MemberProvider, bool>(
+      (member) => member.pendingInvites.isNotEmpty,
+    );
 
     final firstName = userName?.trim().split(' ').first;
 
@@ -146,7 +151,12 @@ class _Header extends StatelessWidget {
           IconButton.filledTonal(
             tooltip: 'Convites',
             onPressed: () => context.pushNamed('pendingInvites'),
-            icon: const Icon(Icons.mail_outline),
+            icon: Badge(
+              isLabelVisible: hasPendingInvites,
+              smallSize: 12,
+              backgroundColor: scheme.primary,
+              child: const Icon(Icons.mail_outline),
+            ),
             style: IconButton.styleFrom(
               fixedSize: const Size(44, 44),
               minimumSize: const Size(44, 44),
