@@ -107,7 +107,7 @@ class ApiExpenseRepository implements ExpenseRepository {
       throw Exception('Você não tem acesso a esse recurso.');
     }
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception('Erro na API (${response.statusCode}): ${response.body}');
+      throw Exception(response.body);
     }
   }
 }

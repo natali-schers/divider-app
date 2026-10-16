@@ -27,6 +27,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _submit() async {
     final authProvider = context.read<AuthProvider>();
 
+    if (_nameController.text.trim().isEmpty ||
+        _emailController.text.trim().isEmpty ||
+        _passwordController.text.isEmpty) {
+      authProvider.clearError();
+      return;
+    }
+
     final success = await authProvider.register(
       name: _nameController.text.trim(),
       email: _emailController.text.trim(),
@@ -47,7 +54,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         scrolledUnderElevation: 0,
       ),
       body: SafeArea(
-        child: Consumer<AuthProvider>(
+        child: Consumer<AuthProvider> (
           builder: (context, authProvider, child) {
             return Column(
               children: [
@@ -136,7 +143,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             const SizedBox(height: 16),
                             TextButton(
-                              onPressed: () => context.go('/login'),
+                              onPressed: () {
+                                authProvider.clearError();
+                                context.go('/login');
+                              },
                               child: const Text('Voltar para login'),
                             ),
                           ],

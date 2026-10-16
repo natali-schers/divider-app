@@ -25,6 +25,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _submit() async {
     final authProvider = context.read<AuthProvider>();
 
+    if (_emailController.text.trim().isEmpty || _passwordController.text.isEmpty) {
+      authProvider.clearError();
+      return;
+    }
+
     final success = await authProvider.login(
       email: _emailController.text.trim(),
       password: _passwordController.text,
@@ -119,7 +124,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             const SizedBox(height: 16),
                             TextButton(
-                              onPressed: () => context.push('/register'),
+                              onPressed: () {
+                                authProvider.clearError();
+                                context.push('/register');
+                              },
                               child: const Text('Criar uma conta'),
                             ),
                           ],

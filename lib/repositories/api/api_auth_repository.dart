@@ -52,7 +52,7 @@ class ApiAuthRepository implements AuthRepository {
       throw Exception('Já existe uma conta com esse email.');
     }
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception('Erro na API (${response.statusCode}): ${response.body}');
+      throw Exception(response.body);
     }
   }
 }
