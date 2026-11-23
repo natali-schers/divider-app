@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:divider/config/app_config.dart';
 import 'package:divider/models/auth_result.dart';
+import 'package:divider/repositories/api/api_client.dart';
 import 'package:divider/repositories/auth_repository.dart';
 import 'package:http/http.dart' as http;
 
@@ -49,10 +50,12 @@ class ApiAuthRepository implements AuthRepository {
       throw Exception('Email ou senha inválidos.');
     }
     if (response.statusCode == 409) {
-      throw Exception('Já existe uma conta com esse email.');
+      throw const EmailAlreadyRegisteredException();
     }
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception(response.body);
+      throw Exception(
+        ApiClient.messageFrom(response, fallback: 'Algo deu errado. Tente novamente.'),
+      );
     }
   }
 }

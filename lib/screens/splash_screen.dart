@@ -6,7 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({super.key, this.redirectTo});
+
+  /// Rota para onde seguir após o splash, se o usuário estiver autenticado.
+  final String? redirectTo;
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -27,13 +30,18 @@ class _SplashScreenState extends State<SplashScreen> {
       warmup
           .waitUntilWarm(timeout: const Duration(seconds: 5))
           .catchError((_) {}),
+      authProvider.restoreSession(),
       Future.delayed(const Duration(seconds: 5)),
     ]);
 
     if (!mounted) return;
 
     if (authProvider.status == AuthStatus.authenticated) {
-      context.go('/');
+      final redirectTo = widget.redirectTo;
+      final canRedirect = redirectTo != null &&
+          redirectTo.startsWith('/') &&
+          !redirectTo.startsWith('/divider');
+      context.go(canRedirect ? redirectTo : '/');
     } else {
       context.go('/login');
     }

@@ -33,6 +33,8 @@ class Expense {
       splitType: SplitType.values.firstWhere(
         (e) =>
             e.name.toLowerCase() == (json['splitType'] as String).toLowerCase(),
+        // Despesas antigas podem ter tipos de divisão que não existem mais.
+        orElse: () => SplitType.equal,
       ),
       splits: (json['splits'] as List)
           .map((s) => ExpenseSplit.fromJson(s as Map<String, dynamic>))
