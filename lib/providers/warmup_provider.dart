@@ -1,9 +1,9 @@
 import 'package:divider/repositories/warmup_repository.dart';
-import 'package:divider/repositories/warmup_repository_factory.dart';
+import 'package:divider/repositories/api/api_warmup_repository.dart';
 import 'package:flutter/foundation.dart';
 
 class WarmupProvider extends ChangeNotifier {
-  final WarmupRepository _warmupRepository = WarmupRepositoryFactory.create();
+  final WarmupRepository _warmupRepository = ApiWarmupRepository();
 
   bool _isLoading = false;
   bool _isReady = false;

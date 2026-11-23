@@ -1,11 +1,11 @@
 import 'package:divider/models/load_status.dart';
 import 'package:divider/models/pending_invite.dart';
 import 'package:divider/repositories/member_repository.dart';
-import 'package:divider/repositories/member_repository_factory.dart';
+import 'package:divider/repositories/api/api_member_repository.dart';
 import 'package:flutter/material.dart';
 
 class MemberProvider extends ChangeNotifier {
-  final MemberRepository _memberRepository = MemberRepositoryFactory.create();
+  final MemberRepository _memberRepository = ApiMemberRepository();
 
   List<PendingInvite> _pendingInvites = [];
   List<PendingInvite> get pendingInvites => _pendingInvites;

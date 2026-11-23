@@ -9,19 +9,34 @@ import '../models/group.dart';
 import '../models/member.dart';
 import '../providers/expense_provider.dart';
 
-class BalancesScreen extends StatelessWidget {
+class BalancesScreen extends StatefulWidget {
   final Group group;
 
   const BalancesScreen({super.key, required this.group});
 
+  @override
+  State<BalancesScreen> createState() => _BalancesScreenState();
+}
+
+class _BalancesScreenState extends State<BalancesScreen> {
   static final _currencyFormat = NumberFormat.currency(
     locale: 'pt_BR',
     symbol: 'R\$',
   );
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _load());
+  }
+
+  Future<void> _load() {
+    return context.read<ExpenseProvider>().loadSettlements(widget.group.id);
+  }
+
   String _memberName(String memberId) {
     final Member? member =
-        group.members.where((m) => m.id == memberId).firstOrNull;
+        widget.group.members.where((m) => m.id == memberId).firstOrNull;
     return member?.user?.name ?? member?.inviteEmail ?? 'Membro desconhecido';
   }
 
@@ -39,14 +54,26 @@ class BalancesScreen extends StatelessWidget {
                 Expanded(
                   child: Consumer<ExpenseProvider>(
                     builder: (context, expenseProvider, child) {
-                      if (expenseProvider.status != LoadStatus.success) {
-                        return const Center(child: LoadingView());
+                      switch (expenseProvider.settlementsStatus) {
+                        case LoadStatus.initial:
+                        case LoadStatus.loading:
+                          return const Center(child: LoadingView());
+                        case LoadStatus.error:
+                          debugPrint(
+                            'Erro ao carregar saldos: ${expenseProvider.settlementsErrorMessage}',
+                          );
+                          return MessageState(
+                            icon: Icons.cloud_off_outlined,
+                            title: 'Não foi possível carregar os saldos',
+                            subtitle: 'Tente novamente em alguns instantes.',
+                            actionLabel: 'Tentar novamente',
+                            onAction: _load,
+                          );
+                        case LoadStatus.success:
+                          break;
                       }
 
-                      final memberIds =
-                          group.members.map((m) => m.id).toList();
-                      final settlements =
-                          expenseProvider.getSettlements(memberIds);
+                      final settlements = expenseProvider.settlements;
 
                       if (settlements.isEmpty) {
                         return const MessageState(

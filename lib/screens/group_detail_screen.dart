@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../models/expense.dart';
 import '../models/group.dart';
+import '../providers/auth_provider.dart';
 import '../providers/expense_provider.dart';
+import '../providers/group_provider.dart';
 
 class GroupDetailScreen extends StatefulWidget {
   final Group group;
@@ -45,8 +48,87 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
     return payer?.user?.name ?? payer?.inviteEmail ?? 'Membro desconhecido';
   }
 
+  /// Id do membro do grupo vinculado ao usuário logado, se houver.
+  String? _currentMemberId() {
+    final userId = context.read<AuthProvider>().currentUser?.id;
+    if (userId == null) return null;
+
+    return widget.group.members
+        .where((m) => m.user?.id == userId)
+        .firstOrNull
+        ?.id;
+  }
+
+  Future<bool> _confirm({
+    required String title,
+    required String content,
+  }) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Excluir'),
+          ),
+        ],
+      ),
+    );
+
+    return confirmed == true;
+  }
+
+  Future<void> _deleteExpense(Expense expense) async {
+    final confirmed = await _confirm(
+      title: 'Excluir despesa?',
+      content: '"${expense.description}" será removida do grupo.',
+    );
+    if (!confirmed || !mounted) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    final error = await context.read<ExpenseProvider>().deleteExpense(
+      groupId: widget.group.id,
+      expenseId: expense.id,
+    );
+
+    messenger.showSnackBar(
+      SnackBar(content: Text(error ?? 'Despesa excluída.')),
+    );
+  }
+
+  Future<void> _deleteGroup() async {
+    final confirmed = await _confirm(
+      title: 'Excluir grupo?',
+      content:
+          '"${widget.group.name}" será excluído para todos os participantes. '
+          'Só é possível excluir grupos sem despesas.',
+    );
+    if (!confirmed || !mounted) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    final error = await context.read<GroupProvider>().deleteGroup(
+      widget.group.id,
+    );
+
+    if (!mounted) return;
+
+    messenger.showSnackBar(
+      SnackBar(content: Text(error ?? 'Grupo excluído.')),
+    );
+
+    if (error == null) context.go('/');
+  }
+
   @override
   Widget build(BuildContext context) {
+    final currentMemberId = _currentMemberId();
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -55,7 +137,7 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _Header(group: widget.group),
+                _Header(group: widget.group, onDelete: _deleteGroup),
                 Expanded(
                   child: Consumer<ExpenseProvider>(
                     builder: (context, expenseProvider, child) {
@@ -113,6 +195,11 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
                                   amount: _currencyFormat.format(
                                     expense.amount,
                                   ),
+                                  // Só quem pagou a despesa pode excluí-la.
+                                  onDelete:
+                                      expense.paidByMemberId == currentMemberId
+                                      ? () => _deleteExpense(expense)
+                                      : null,
                                 );
                               },
                             ),
@@ -140,9 +227,10 @@ class _GroupDetailScreenState extends State<GroupDetailScreen> {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.group});
+  const _Header({required this.group, required this.onDelete});
 
   final Group group;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -164,12 +252,14 @@ class _Header extends StatelessWidget {
                   icon: const Icon(Icons.arrow_back),
                 ),
                 const SizedBox(width: 16),
-                Text(
-                  group.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+                Flexible(
+                  child: Text(
+                    group.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
@@ -184,6 +274,12 @@ class _Header extends StatelessWidget {
               extra: group,
             ),
             icon: const Icon(Icons.account_balance_wallet_outlined),
+          ),
+          const SizedBox(width: 8),
+          IconButton.filledTonal(
+            tooltip: 'Excluir grupo',
+            onPressed: onDelete,
+            icon: const Icon(Icons.delete_outline),
           ),
         ],
       ),
@@ -244,12 +340,14 @@ class _ExpenseCard extends StatelessWidget {
     required this.payerName,
     required this.date,
     required this.amount,
+    this.onDelete,
   });
 
   final String description;
   final String payerName;
   final String date;
   final String amount;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -312,6 +410,14 @@ class _ExpenseCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            if (onDelete != null) ...[
+              const SizedBox(width: 4),
+              IconButton(
+                tooltip: 'Excluir despesa',
+                onPressed: onDelete,
+                icon: Icon(Icons.delete_outline, color: scheme.error),
+              ),
+            ],
           ],
         ),
       ),

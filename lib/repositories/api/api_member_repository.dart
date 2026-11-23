@@ -19,7 +19,7 @@ class ApiMemberRepository implements MemberRepository {
         .get(Uri.parse('$_baseUrl/members/pending-invites'), headers: headers)
         .timeout(_timeout);
 
-    _throwIfError(response);
+    ApiClient.throwIfError(response);
 
     final List<dynamic> data = jsonDecode(response.body);
 
@@ -40,18 +40,6 @@ class ApiMemberRepository implements MemberRepository {
         )
         .timeout(_timeout);
 
-    _throwIfError(response);
-  }
-
-  void _throwIfError(http.Response response) {
-    if (response.statusCode == 401) {
-      throw Exception('Sessão expirada. Faça login novamente.');
-    }
-    if (response.statusCode == 403) {
-      throw Exception('Você não tem acesso a esse recurso.');
-    }
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception(response.body);
-    }
+    ApiClient.throwIfError(response);
   }
 }
